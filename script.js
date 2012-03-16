@@ -76,6 +76,11 @@ function scrobble(user) {
 	if(!activated) {
 		return;
 	}
+	var users = [user];
+	if(user.indexOf(",")!=-1) {
+		users = user.split(",");
+	}
+	
 	for(var i = 0; i < 5; i++) {
 		// Get toplist of user
 		var  toplist = new models.Toplist();
@@ -85,7 +90,7 @@ function scrobble(user) {
 			case 0:
 				toplist.toplistType = models.TOPLISTTYPE.USER;
 				toplist.matchType = models.TOPLISTMATCHES.ARTISTS; 
-				toplist.userName = user;
+				toplist.userName = users[Math.floor(users.length*Math.random())];
 				toplist.observe(models.EVENT.CHANGE, function() {
 					
 					var _artist = toplist.results[Math.floor(toplist.results.length*Math.random())];
@@ -157,16 +162,21 @@ function load(){
 		console.log(args);
 		temp_playlist = new models.Playlist();
 		first = true;
+		
 		try {
+			
 			if(args.length > 0) {
 		
 				user = args[0];
+				$("#username").html(user);
 				switch_section("radio");
 				scrobble(user);
 			} else {
+				$("#username").html("Jukeman");
 				switch_section("overview");
 			}
 		} catch( e) {
+			
 			console.log(e.stack);
 		}
 	});
