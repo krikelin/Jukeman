@@ -72,95 +72,119 @@ function scrollTo(no) {
 	}
 	
 }
-function scrobble(user) {
+var mode = "user";
+var playlist = null;
+function scrobble() {
 	if(!activated) {
 		return;
 	}
 	var users = [user];
-	if(user.indexOf(",")!=-1) {
-		users = user.split(",");
+	if(user!=null) {
+		if(user.indexOf(",")!=-1) {
+			users = user.split(",");
+		}
 	}
 	
 	for(var i = 0; i < 5; i++) {
 		// Get toplist of user
 		var  toplist = new models.Toplist();
 		// Select mode by random
-		var c = 1;
-		switch(c) {
-			case 1:
-				toplist.toplistType = models.TOPLISTTYPE.USER;
-				toplist.matchType = models.TOPLISTMATCHES.TRACKS; 
-				toplist.userName = users[Math.floor(users.length*Math.random())];
-				toplist.observe(models.EVENT.CHANGE, function() {
-					console.log(Math.floor(toplist.results.length*Math.random()));
-					var _track = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
-						console.log(_track.data);	
-						console.log(_track.data.artists[0].uri);
-					var __artist = models.Artist.fromURI(_track.data.artists[0].uri, function(artist) {
-						console.log(artist);
-						console.log(artist.data.name);
-						var search = new models.Search("artist:\"" + artist.data.name + "\"");
-						search.observe(models.EVENT.CHANGE, function() {
-							var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
-							temp_playlist.add(track);
-							if(temp_playlist.length > 0) {
-								if(first) {
-									scrollTo(0);
-									models.player.play(temp_playlist.get(0), temp_playlist);
-									first = false;
-								}
-							} else {
-							}
-						});
-						search.appendNext();
-					});
+		if(mode == "playlist") {
+			var pls = models.Playlist.fromURI("spotify:user:" + user + ":playlist:" + playlist, function(playlist) {
+				var track = playlist.tracks[Math.floor(playlist.tracsk.length*Math.random())];
+				var search = new models.Search("artist:\"" + track.data.artists[0].uri +"\"");
+				search.observe(modes.EVENT.CHANGE, function() {
+					var track2 = search.tracks[Math.floor(search.tracks.length*Math.random())];
+					temp_playlist.add(track2);
+					if(temp_playlist.length > 0) {
+						if(first) {
+							scrollTo(0);
+							models.player.play(temp_playlist.get(0), temp_playlist);
+							first = false;
+						}
+					} else {
+					}
 				});
-				toplist.run();
-				break;
-			case 0:
-				toplist.toplistType = models.TOPLISTTYPE.USER;
-				toplist.matchType = models.TOPLISTMATCHES.ARTISTS; 
-				toplist.userName = users[Math.floor(users.length*Math.random())];
-				toplist.observe(models.EVENT.CHANGE, function() {
-					console.log(Math.floor(toplist.results.length*Math.random()));
-					var _artist = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
-					console.log(_artist.data);	
-					console.log(toplist.results);
-					var __artist = models.Artist.fromURI(_artist.data.uri, function(artist) {
-						console.log(artist);
-						console.log(artist.data.name);
-						var search = new models.Search("artist:\"" + artist.data.name + "\"");
-						search.observe(models.EVENT.CHANGE, function() {
-							var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
-							temp_playlist.add(track);
-							if(temp_playlist.length > 0) {
-								if(first) {
-									scrollTo(0);
-									models.player.play(temp_playlist.get(0), temp_playlist);
-									first = false;
+				search.appendNext();
+			});
+		}else if(mode == "user") {
+			var c = 1;
+			switch(c) {
+				case 1:
+					toplist.toplistType = models.TOPLISTTYPE.USER;
+					toplist.matchType = models.TOPLISTMATCHES.TRACKS; 
+					toplist.userName = users[Math.floor(users.length*Math.random())];
+					toplist.observe(models.EVENT.CHANGE, function() {
+						console.log(Math.floor(toplist.results.length*Math.random()));
+						var _track = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
+							console.log(_track.data);	
+							console.log(_track.data.artists[0].uri);
+						var __artist = models.Artist.fromURI(_track.data.artists[0].uri, function(artist) {
+							console.log(artist);
+							console.log(artist.data.name);
+							var search = new models.Search("artist:\"" + artist.data.name + "\"");
+							search.observe(models.EVENT.CHANGE, function() {
+								var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
+								temp_playlist.add(track);
+								if(temp_playlist.length > 0) {
+									if(first) {
+										scrollTo(0);
+										models.player.play(temp_playlist.get(0), temp_playlist);
+										first = false;
+									}
+								} else {
 								}
-							} else {
-							}
+							});
+							search.appendNext();
 						});
-						search.appendNext();
-						
+					});
+					toplist.run();
+					break;
+				case 0:
+					toplist.toplistType = models.TOPLISTTYPE.USER;
+					toplist.matchType = models.TOPLISTMATCHES.ARTISTS; 
+					toplist.userName = users[Math.floor(users.length*Math.random())];
+					toplist.observe(models.EVENT.CHANGE, function() {
+						console.log(Math.floor(toplist.results.length*Math.random()));
+						var _artist = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
+						console.log(_artist.data);	
+						console.log(toplist.results);
+						var __artist = models.Artist.fromURI(_artist.data.uri, function(artist) {
+							console.log(artist);
+							console.log(artist.data.name);
+							var search = new models.Search("artist:\"" + artist.data.name + "\"");
+							search.observe(models.EVENT.CHANGE, function() {
+								var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
+								temp_playlist.add(track);
+								if(temp_playlist.length > 0) {
+									if(first) {
+										scrollTo(0);
+										models.player.play(temp_playlist.get(0), temp_playlist);
+										first = false;
+									}
+								} else {
+								}
+							});
+							search.appendNext();
 							
-							// This was removed in one build
-						/*	artist.getAlbums(function(albums) {
-								console.log(albums);
-								var album = albums[Math.floor(Math.random()*albums.length)];
-								models.Album.fromURI(album.uri, function(album) {
-									var track = album.tracks[Math.floor(album.tracks.length*Math.random())];
-									temp_playlist.add(track);
-								});
-							});*/
+								
+								// This was removed in one build
+							/*	artist.getAlbums(function(albums) {
+									console.log(albums);
+									var album = albums[Math.floor(Math.random()*albums.length)];
+									models.Album.fromURI(album.uri, function(album) {
+										var track = album.tracks[Math.floor(album.tracks.length*Math.random())];
+										temp_playlist.add(track);
+									});
+								});*/
+						});
 					});
-				});
-				
-				
-				toplist.run();
-				
-				break;
+					
+					
+					toplist.run();
+					
+					break;
+			}
 		}
 	}
 }
@@ -170,7 +194,14 @@ var can_change = true;
 var preTrack = null;
 var nowTrack = null;
 var activated = true;
+function addPlaylist() {
+	var playlist = new models.Playlist("Jukeman: " + user + "");
+	temp_playlist.tracks.forEach(function(track) {
+		playlist.add(track);
+	});
+}
 function load(){
+	document.getElementById("addPlaylist").addEventListener("click", addPlaylist);
 	console.log(models.EVENT);
 	temp_playlist = new models.Playlist();
 
@@ -191,17 +222,23 @@ function load(){
 		activated = true;
 		var args = models.application.arguments;
 		console.log(args);
-		temp_playlist = new models.Playlist();
+		
+		
 		first = true;
 		
 		try {
 			
 			if(args.length > 0) {
-		
-				user = args[0];
+				mode = args[0];
+				user = args[1];
+				mode = "user";
+				if(args.length > 2) {
+					playlist = args[3];
+					mode = "playlist";
+				}
 				$("#username").html(user);
 		//		switch_section("radio");
-				scrobble(user);
+				scrobble();
 			} else {
 				$("#username").html("Jukeman");
 			//	switch_section("overview");
