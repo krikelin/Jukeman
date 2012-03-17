@@ -4,6 +4,8 @@
 	padding:8px;
 	border-radius:12px;
 	font-size:23px;
+	width:120px;
+	
 	color:#88ff88;
 	vertical-align:center;
 	position: relative;
@@ -163,6 +165,9 @@ body{
 text-align: center;
 	
 }
+.section {
+
+}
 .box {
 	
 	margin-left:20%;
@@ -210,6 +215,8 @@ text-align: center;
 	font-family: "Helvetica";
 	font-weight: bold;
 	color:#FFFFFF;
+		top:320px;
+	margin-top:30px;
 	text-shadow:0px -1px 1px #333333;
 }
 #bigyear{
@@ -274,7 +281,7 @@ header{
 	background-color:#333333;
 	border-bottom: 1px solid #000000;
 	height:64px;
-	text-align: middle;
+	text-align: center;
 	
 
 	

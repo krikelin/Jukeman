@@ -30,23 +30,22 @@
 		<script src="js/xmlhttp.js" language="javascript"></script>
 	</head>
 	<body  onload="sp = getSpotifyApi(1); script = sp.require('script'); script.init()">
-		<header>
-			<span class="display" id="username">Jukeman</span>
-		</header>
-		<div  class="section" id="section_overview">
-			<div class="container">
-				<input type="text" id="user" name="user" placeholder="Enter an user name" class="input" /><button class="button" id="btnGo" >Go</button>
-			</div>
-		</div>	
-		<div id="section_radio" class="section" style="display: none">
+		<header style="text-align:middle">
+			<div class="display" id="username">Jukeman</div> <input type="text" id="user" name="user" placeholder="Enter an user name" class="input" /><button class="button" id="btnGo" >Go</button>
 			
-				<div id="radiosectio">
+		</header>
+		<div  class="section" id="section_overview"><br />
+				
+			
+			
+				<div id="radiosection">
 					<div id="l_track" ></div>
 					<div id="track" ></div>
 					<div id="r_track" ></div>
 					
 					<div id="msg" ></div>
 				</div>
+				
 			
 		</div>
 		<footer>

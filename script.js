@@ -85,19 +85,50 @@ function scrobble(user) {
 		// Get toplist of user
 		var  toplist = new models.Toplist();
 		// Select mode by random
-		var c = 0;
+		var c = 1;
 		switch(c) {
+			case 1:
+				toplist.toplistType = models.TOPLISTTYPE.USER;
+				toplist.matchType = models.TOPLISTMATCHES.TRACKS; 
+				toplist.userName = users[Math.floor(users.length*Math.random())];
+				toplist.observe(models.EVENT.CHANGE, function() {
+					console.log(Math.floor(toplist.results.length*Math.random()));
+					var _track = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
+						console.log(_track.data);	
+						console.log(_track.data.artists[0].uri);
+					var __artist = models.Artist.fromURI(_track.data.artists[0].uri, function(artist) {
+						console.log(artist);
+						console.log(artist.data.name);
+						var search = new models.Search("artist:\"" + artist.data.name + "\"");
+						search.observe(models.EVENT.CHANGE, function() {
+							var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
+							temp_playlist.add(track);
+							if(temp_playlist.length > 0) {
+								if(first) {
+									scrollTo(0);
+									models.player.play(temp_playlist.get(0), temp_playlist);
+									first = false;
+								}
+							} else {
+							}
+						});
+						search.appendNext();
+					});
+				});
+				toplist.run();
+				break;
 			case 0:
 				toplist.toplistType = models.TOPLISTTYPE.USER;
 				toplist.matchType = models.TOPLISTMATCHES.ARTISTS; 
 				toplist.userName = users[Math.floor(users.length*Math.random())];
 				toplist.observe(models.EVENT.CHANGE, function() {
-					
-					var _artist = toplist.results[Math.floor(toplist.results.length*Math.random())];
+					console.log(Math.floor(toplist.results.length*Math.random()));
+					var _artist = toplist.results[Math.floor(toplist.results.length*(1-Math.random()))];
+					console.log(_artist.data);	
 					console.log(toplist.results);
 					var __artist = models.Artist.fromURI(_artist.data.uri, function(artist) {
 						console.log(artist);
-			
+						console.log(artist.data.name);
 						var search = new models.Search("artist:\"" + artist.data.name + "\"");
 						search.observe(models.EVENT.CHANGE, function() {
 							var track = search.tracks[Math.floor(search.tracks.length*Math.random())];
@@ -169,11 +200,11 @@ function load(){
 		
 				user = args[0];
 				$("#username").html(user);
-				switch_section("radio");
+		//		switch_section("radio");
 				scrobble(user);
 			} else {
 				$("#username").html("Jukeman");
-				switch_section("overview");
+			//	switch_section("overview");
 			}
 		} catch( e) {
 			
