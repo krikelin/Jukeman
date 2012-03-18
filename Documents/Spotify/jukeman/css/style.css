@@ -59,6 +59,40 @@ nav {
 	text-shadow: 0px 1px 1px #555555;
 	
 }
+ul.users {	
+	list-style-image: url("../img/user.png");
+	padding-top:0px;
+}
+.users li {
+	padding-top:0px;
+	float: left;
+	line-height:10px;
+	font-size:11px;
+	padding-right:50px;
+	color: #EEEEEE;
+	text-shadow: 0px 1px 3px #000000;
+}
+.users li:after {
+
+	padding-left:10px;
+
+}
+#users {
+	padding-left:50px;
+	top:10px;
+	width:75%;
+	height:38px;
+	background-color:#202020;
+	
+	position:absolute;
+	left:10%;
+	box-shadow:inset 0px 1px 1px #000000,inset 0px -0.2px 1px #666, inset -0.2px -0.2px 1px #666 ;
+	-webkit-border-radius:5px;
+	
+}
+#users > * {
+	margin:5px;'
+}
 #alert {
 	left:20%;
 	top:20%;
@@ -72,7 +106,7 @@ nav {
 }
 	
 .sp-image {
-	-webkit-box-reflect:below 5px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
+	-webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
 	border-radius:1px;
 	
 	}
@@ -167,9 +201,10 @@ strong{
 	}
 }
 body{
-	background-size: 100% 100%;
+
 	min-height: 100%;
 	background-position: fixed;
+	background-image: url("../img/bg2.png");
 	/*box-shadow:inset 0px 215px 1125px #000000, inset 0px -120px 1125px #aaaaaa;*/
 /*	background-image: url("../img/bg.png"); */
 text-align: center;

@@ -40,36 +40,29 @@ function getLeft(no) {
 	return   window.innerWidth +((no) * tile_size);
 }
 function scrollTo(no) {	
-	$("#l_track").html("");
-	$("#r_track").html("");
-	$("#track").html("");
 	var track = temp_playlist.get(no);
+	$(".cover").each(function(index) {
+		$(this).animate({left:"-=25px", top:"+=15px", height: "-=30px", width:"-=10px", opacity: "-=0.25"});
+		if($(this).css("opacity") < 0.25) {
+			$(this).remove();
+		}
+	});
 	// Create first view
 	var player = new views.Image(track.data.album.cover, track.data.uri, "M");
 	player.node.style.width = "340px";
 	player.node.style.height = "340px";
+	player.node.style.position = "absolute";
+	player.node.style.left = "420px";
+	player.node.style.top = "120px";
 	
-	$("#track").append(player.node);
+	$(player.node).addClass("cover");
+	$(player.node).hide();
+	$("#radio").append(player.node);
+	$(player.node).fadeIn();
 	
-	// Create left and rightview
+	// Shift the others to the left
 	
-	// Create left view
-	if(no > 0) {
-		track = temp_playlist.get(no - 1);
-		var l_player = new views.Image(track.data.album.cover, track.data.uri, "M");
 	
-		l_player.node.style.width = "120px";
-		l_player.node.style.height = "120px";
-		$("#l_track").append(l_player.node);
-	}
-	if(no < temp_playlist.tracks.length - 1) {
-		track = temp_playlist.get(no+1);
-		var r_player = new views.Image(track.data.album.cover, track.data.uri, "M");
-	
-		r_player.node.style.width = "120px";
-		r_player.node.style.height = "120px";
-		$("#r_track").append(r_player.node);
-	}
 	
 }
 function prepareShowQuery(str, date) {
@@ -81,8 +74,8 @@ function prepareShowQuery(str, date) {
 	return str;
 }
 var radio_pos = 0;
-var show_queries = ["Deluxe  P3"];
-var show = false;
+var show_queries = ["Deluxe  P3", "Sommar P1", "Mammas nya kille P3"];
+var show = true;	
 var mode = "user";
 var playlist = null;
 function scrobble() {
@@ -102,7 +95,7 @@ function scrobble() {
 		$(this).removeClass("playing");
 		console.log("REMOVED");
 	});
-	var date = new Date(2012,3,18,12,4,0,0);
+	var date = new Date();
 	for(var i = 0; i < 5; i++) {
 		// Get toplist of user
 		var  toplist = new models.Toplist();
@@ -298,18 +291,19 @@ function load(){
 				if(user.indexOf(",")!=-1) {
 					users = user.split(",");
 				}
-				var nav = document.getElementById("users");
+				var nav = document.getElementById("users_list");
 				$(nav).html(""); // Clear
 				for(var i = 0; i < users.length; i++) {	
 					console.log("USERS");
 					var li = document.createElement("li");
-					models.User.fromURI("spotify:user:" + users[i], function(user) {
-						console.log(user);
-					});
+					
 					$(li).addClass("user");
 					$(li).html(users[i]);
 					li.setAttribute("id", "u_" + users[i]);
-					$("#users").append(li);
+					var a = document.createElement("a");
+					a.setAttribute("href", "spotify:user:" + users[i]);
+					li.appendChild(a);
+					$("#users_list").append(li);
 				}
 		//		switch_section("radio");
 				scrobble();
