@@ -72,6 +72,17 @@ function scrollTo(no) {
 	}
 	
 }
+function prepareShowQuery(str, date) {
+	if(typeof date == "undefined") {
+		date = new Date();
+	}
+	str = str.replace("%d", date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate());
+	str = str.replace("%t", date.getHours()+ ":" + date.getMinutes());
+	return str;
+}
+var radio_pos = 0;
+var show_queries = ["Deluxe  P3"];
+var show = false;
 var mode = "user";
 var playlist = null;
 function scrobble() {
@@ -91,10 +102,45 @@ function scrobble() {
 		$(this).removeClass("playing");
 		console.log("REMOVED");
 	});
+	var date = new Date(2012,3,18,12,4,0,0);
 	for(var i = 0; i < 5; i++) {
 		// Get toplist of user
 		var  toplist = new models.Toplist();
-		// Select mode by random
+		// Select mode by random 
+		if(date.getMinutes() >= 0 && date.getMinutes() <= 5 && show && show_queries.length > 0 ) {
+			if(radio_pos > show_queries.length -1) {
+				radio_pos = 0;
+			}
+			var show_query = show_queries[radio_pos];
+			radio_pos++;
+			console.log(show_query);
+			// If the show query is a sptoify uri use it, otherwise search it like a string
+			if(show_query.indexOf("spotify:track") == -1) {
+				var search = new models.Search(prepareShowQuery(show_query, date), {localResults: models.LOCALSEARCHRESULTS.PREPEND});
+				search.observe(models.EVENT.CHANGE, function() {
+					console.log(search.tracks.length);
+					if(search.tracks.length > 0) {
+					
+						var track2 = search.tracks[0];
+						console.log(track2);
+						temp_playlist.add(track2);
+						if(temp_playlist.length > 0) {
+							if(first) {
+								scrollTo(0);
+								models.player.play(temp_playlist.get(0), temp_playlist);
+								first = false;
+							}
+						} else {
+						}
+					}
+				});
+				search.appendNext();
+			} else {
+				models.Track.fromURI(show_query, function(track) {
+					temp_playlist.add(track);
+				});
+			}
+		}
 		if(mode == "playlist") {
 			var pls = models.Playlist.fromURI("spotify:user:" + user + ":playlist:" + playlist, function(playlist) {
 				var track = playlist.tracks[Math.floor(playlist.tracsk.length*Math.random())];
@@ -207,6 +253,7 @@ function addPlaylist() {
 	});
 }
 function load(){
+	console.log(sp.social);
 	document.getElementById("addPlaylist").addEventListener("click", addPlaylist);
 	
 	temp_playlist = new models.Playlist();
@@ -248,7 +295,7 @@ function load(){
 				// Create user 
 				var users = [user];
 				console.log(user);
-				if(user.indexOf(",")) {
+				if(user.indexOf(",")!=-1) {
 					users = user.split(",");
 				}
 				var nav = document.getElementById("users");
