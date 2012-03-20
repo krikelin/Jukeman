@@ -75,7 +75,7 @@ function prepareShowQuery(str, date) {
 }
 var radio_pos = 0;
 var show_queries = ["Deluxe  P3", "Sommar P1", "Mammas nya kille P3"];
-var show = true;	
+var show = false;	
 var mode = "user";
 var playlist = null;
 function scrobble() {
@@ -83,6 +83,9 @@ function scrobble() {
 		return;
 	}
 	var users = [user];
+	if(user == "$me") {
+		var friends = ["drsounds"];
+	}
 	console.log(user);
 	if(user!=null) {
 		if(user.indexOf(",")!=-1) {
@@ -245,8 +248,74 @@ function addPlaylist() {
 		playlist.add(track);
 	});
 }
+function update() {
+	try {
+		document.body.style.backgroundImage = "";
+		activated = true;
+		var args = models.application.arguments;
+		console.log(args);
+		temp_playlist = new models.Playlist();
+		
+		first = true;
+		
+		if(args.length > 1) {
+			
+			mode = args[0];
+			user = args[1];
+			
+			if(args.length > 2) {
+				playlist = args[3];
+				mode = "playlist";
+			}
+			
+			console.log("F");
+			// Create user 
+			var users = [user];
+			console.log(user);
+			if(user.indexOf(",")!=-1) {
+				users = user.split(",");
+			}
+			var nav = document.getElementById("users_list");
+			$(nav).html(""); // Clear
+			
+			for(var i = 0; i < users.length; i++) {	
+				console.log("USERS");
+				var li = document.createElement("li");
+				
+				$(li).addClass("user");
+				
+				li.setAttribute("id", "u_" + users[i]);
+				var a = document.createElement("a");
+				a.setAttribute("href", "spotify:user:" + users[i]);
+				$(a).html(users[i]);
+				li.appendChild(a);
+				$("#users_list").append(li);
+			}
+		
+	//		switch_section("radio");
+			scrobble();
+		} else {
+			user = "$me";
+			var li = document.createElement("li");
+			
+			$(li).addClass("user");
+			
+			li.setAttribute("id", "u_friends");
+			var a = document.createElement("a");
+			a.setAttribute("href", "spotify:app:people:spotify");
+			$(a).html("Me");
+			li.appendChild(a);
+			$("#users_list").append(li);
+		//	switch_section("overview");
+		}
+	} catch( e) {
+		
+		console.log(e.stack);
+	}
+}
 function load(){
-	console.log(sp.social);
+
+	console.log(sp);
 	document.getElementById("addPlaylist").addEventListener("click", addPlaylist);
 	
 	temp_playlist = new models.Playlist();
@@ -256,7 +325,7 @@ function load(){
 
 		self.location="spotify:app:jukeman:" + user ;
 	});
-
+	update();
 	models.application.observe(models.EVENT.ACTIVATE, function() {
 		activated = true;
 	});
@@ -265,56 +334,7 @@ function load(){
 	});
 	models.application.observe(models.EVENT.ARGUMENTSCHANGED, function() {
 	
-		try {
-				document.body.style.backgroundImage = "";
-				activated = true;
-				var args = models.application.arguments;
-				console.log(args);
-				temp_playlist = new models.Playlist();
-				
-				first = true;
-				
-			if(args.length > 0) {
-				
-				mode = args[0];
-				user = args[1];
-				
-				if(args.length > 2) {
-					playlist = args[3];
-					mode = "playlist";
-				}
-				
-				console.log("F");
-				// Create user 
-				var users = [user];
-				console.log(user);
-				if(user.indexOf(",")!=-1) {
-					users = user.split(",");
-				}
-				var nav = document.getElementById("users_list");
-				$(nav).html(""); // Clear
-				for(var i = 0; i < users.length; i++) {	
-					console.log("USERS");
-					var li = document.createElement("li");
-					
-					$(li).addClass("user");
-					$(li).html(users[i]);
-					li.setAttribute("id", "u_" + users[i]);
-					var a = document.createElement("a");
-					a.setAttribute("href", "spotify:user:" + users[i]);
-					li.appendChild(a);
-					$("#users_list").append(li);
-				}
-		//		switch_section("radio");
-				scrobble();
-			} else {
-				$("#username").html("Jukeman");
-			//	switch_section("overview");
-			}
-		} catch( e) {
-			
-			console.log(e.stack);
-		}
+		update();
 	});
 	
 	models.player.observe(models.EVENT.CHANGE, function(event) {

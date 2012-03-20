@@ -106,7 +106,7 @@ ul.users {
 }
 	
 .sp-image {
-	-webkit-box-reflect:below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
+	-webkit-box-reflect:below 1px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.5, transparent), to(white));
 	border-radius:1px;
 	
 	}
