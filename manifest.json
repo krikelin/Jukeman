@@ -22,6 +22,10 @@
 	"RequiredPermissions":[
 		"http://*.spotify.com"
 	],
+	"Dependencies": {
+		"api": "0.1.0",
+		"resources": "0.1.0"
+	},
 	"BundleIdentifier": "jukeman",
 	"RequiredInterface" : 1,
 	

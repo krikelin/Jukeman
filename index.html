@@ -30,31 +30,48 @@
 		<script src="js/xmlhttp.js" language="javascript"></script>
 	</head>
 	<body  onload="sp = getSpotifyApi(1); script = sp.require('script'); script.init()">
-		<header style="text-align:middle">
-			<div class="display" id="username">Jukeman</div> <input type="text" id="user" name="user" placeholder="Enter an user name" class="input" /><button class="button" id="btnGo" >Go</button><button style="float:right" id="addPlaylist" class="add-playlist button icon" value=""><span class="plus"></span>Add as Playlist</button><br />
-<br />
+		<header>
+			<center><img  style="margin-top:12px" src="img/logo.png" /></center> 
 			
 		</header>
-		<div  class="section" id="section_overview"><br />
+		
+		<section id="overview" style="text-align: center">
+			<img src="img/bg1.png" id="dropzone" class="backdrop" />
+		</section>
+		<section id="sorry">
+			<img src="img/sorry.png" class="backdrop" />
+		</section>
+		<section id="radio">
 				
-			
-			
-				<div id="radiosection">
-					<div id="l_track" ></div>
-					<div id="track" ></div>
-					<div id="r_track" ></div>
+			<div id="users">
+				<strong>Radio based on</strong> 
+			<ul id="users_list" class="users">
 					
-					<div id="msg" ></div>
-				</div>
-				
+					<!-- users -->
+				</ul>
 			
-		</div>
-		<footer>
-
-				<div id="current_track"></div>
-
-
-		</footer>
+			</nav>
+			
+			
+					
+			<div id="radiostream" ></div>
+					
+			<span id="trackName">
+				
+				<button style="float:right" id="addPlaylist" class="add-playlist button icon" value=""><span class="plus"></span>Add as Playlist</button>
+			</span>
+			<div id="player" class="play"></div>
+			<footer style="display: none">
+				<h1>Channels you might follow</h1>
+				<ul class="friends">
+					
+					
+				</ul>
+			</footer>
+		</section>
+	
+		
+		
 		<div id="error">
 			<span>Connection has been lost</span>
 		</div>
